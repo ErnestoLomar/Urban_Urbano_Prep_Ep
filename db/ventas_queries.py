@@ -99,14 +99,33 @@ def insertar_venta(fecha: str, origen: str, destino: str,  total: float):
     con.close()
 
 #Función para insertar un item de venta.
-def insertar_item_venta(folio_venta, folio_de_viaje, fecha, hora, id_de_serivio_o_transbordo, id_geocerca, id_tipo_de_pasajero, transbordo_o_no, tipo_pasajero, nombre_de_pasajero, costo):
-    #Creamos la conexión con la base de datos
-    con = sqlite3.connect(URI)
-    cur = con.cursor()
-    cur.execute(
-        f'''INSERT INTO item_venta(folio_venta, folio_viaje, fecha, hora, id_del_servicio_o_transbordo, id_geocerca, id_tipo_de_pasajero, transbordo_o_no, tipo_pasajero, nombre_de_pasajero, costo) VALUES ('{folio_venta}' , '{folio_de_viaje}', '{fecha}', '{hora}', '{id_de_serivio_o_transbordo}' , '{id_geocerca}' , '{id_tipo_de_pasajero}' , '{transbordo_o_no}' , '{tipo_pasajero}' , '{nombre_de_pasajero}' , '{costo}') ''')
-    con.commit()
-    con.close()
+def insertar_item_venta(folio_venta, folio_de_viaje, fecha, hora,
+                        id_de_servicio_o_transbordo, id_geocerca,
+                        id_tipo_de_pasajero, transbordo_o_no,
+                        tipo_pasajero, nombre_de_pasajero, costo):
+    try:
+        con = sqlite3.connect(URI)
+        cur = con.cursor()
+        cur.execute(
+            '''INSERT INTO item_venta(
+                folio_venta, folio_viaje, fecha, hora,
+                id_del_servicio_o_transbordo, id_geocerca, id_tipo_de_pasajero,
+                transbordo_o_no, tipo_pasajero, nombre_de_pasajero, costo
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+            (
+                folio_venta, folio_de_viaje, fecha, hora,
+                id_de_servicio_o_transbordo, id_geocerca,
+                id_tipo_de_pasajero, transbordo_o_no,
+                tipo_pasajero, nombre_de_pasajero, costo
+            )
+        )
+        con.commit()
+        con.close()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
     
 def guardar_venta_digital(folio_aforo_unidad, folio_viaje, fecha, hora, id_tarifa, folio_geoloc,
                             id_tipo_pasajero, transbordo_o_no, tipo_pago, id_monedero, saldo, costo):
@@ -320,6 +339,30 @@ def eliminar_ventas_antiguas(id):
         conexion = sqlite3.connect(URI)
         cursor = conexion.cursor()
         cursor.execute(f"DELETE FROM item_venta WHERE item_venta_id == {id}")
+        conexion.commit()
+        conexion.close()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+def seleccionar_ventas_digitales_antiguas():
+    try:
+        conexion = sqlite3.connect(URI,check_same_thread=False)
+        cursor = conexion.cursor()
+        cursor.execute(f"SELECT venta_digital_id, fecha FROM venta_digital")
+        resultado = cursor.fetchall()
+        conexion.close()
+        return resultado
+    except Exception as e:
+        print(e)
+        return False
+
+def eliminar_ventas_digitales_antiguas(id):
+    try:
+        conexion = sqlite3.connect(URI)
+        cursor = conexion.cursor()
+        cursor.execute(f"DELETE FROM venta_digital WHERE venta_digital_id == {id}")
         conexion.commit()
         conexion.close()
         return True

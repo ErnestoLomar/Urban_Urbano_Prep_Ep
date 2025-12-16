@@ -4,6 +4,68 @@ Software de validador para camiones de transporte urbano para la empresa Urban d
 **Autor: Ernesto Lomar**
 
 Linea cronológica:
+
+- v3.68:
+  - Ahora en la trama 6 digital ya no envia el estado al final de la trama (BOL,ERR,OK).
+  - Ahora la lectura de tarjetas y qr esta dividida en dos procesos diferentes en LeerTarjeta.py.
+  - Ahora los widgets en LeerTarjeta son mostrados desde el hilo principal para una mejor eficacia.
+  - Ahora se hace una verificacion de los campos obtenidos de la tarjeta con 'campo_invalido' para evitar 'IN' en csn, nombre, tipo y vigencia.
+  - Ahora se la trama de qr y nfc prepago trae como ultimo dato el tipo de transaccion (q, Q, f, F).
+  - Nueva matriz tarifaria con Id's 5,000.
+- v3.67:
+  - Se implemento en el archivo de prepago la funcionalidad de que no se muestren los mensajes de error en la pantalla de prepago y que no se cierre la ventana a menos que se pague el boleto con efectivo o se cancele el boleto.
+  - Nuevo diseño de la pantalla de prepago.
+- v3.66:
+  - Ahora ya se pueden ver los ultimos folios de venta digital y efectivo en la pantalla de corte.
+  - Se agregaron nuevos candados a la lectura de la tarjeta en los valores de nombre, tipo y vigencia cuando sea "IN".
+  - Se agrego una nueva mejora del .so donde se corrige el problema de que el nombre puede venir en "IN".
+  - Se optimizaron los tiempos del archivo de prepago y blinka para que el lector NFC pueda detectar celulares con mayor rapidez.
+- v3.65:
+  - Se modifico el archivo .so para que al consultar solo una funcion 'ev2PackInfo' se obtenga toda la informacion de la tarjeta.
+  - Se arreglo el bug de que las ventanas de prepago a veces no se abrian cuando se escogian muchas y que la lectura de tarjetas al cerrar el turno ya no funcionaba.
+- v3.64:
+  - Se modifico el archivo prepago.py y pn532_blinka_adapter.py para que el lector NFC pueda detectar celulares americanos.
+- v3.63:
+  - Se creo un hub_gpio.py para controlar el zumbador, ventilador y reset_reader.
+  - Se volvio a agregar la libreriaadafruit_pn532.
+- v3.62:
+  - Se volvio a lo que se tenia en la version 3.60.
+  - Se incorporo un nuevo archivo de prepago.py creado por Isais.
+- v3.61:
+  - Se cambio la libreria de prepago de pn532pi a adafruit_pn532.
+  - Se desactivo el uso de RPI.GPIO para el zumbador, ventilador y reset_reader.
+- v3.60:
+  - Se regreso al codigo de prepago.py de la version 3.58 con la implementacion del boton de cancelar transaccion.
+- v3.59:
+  - Se modifico la interfaz de corte, pasaje y prepago.
+  - Se agrego el boton de reset_reader en las ventanas de servicio.
+  - Se hizo mas robusto la conexion con el lector NFC en prepago.
+- v3.58:
+  - Se modifico la forma en como se ve el corte.
+  - Se inicializa el pin de RSTPDN_PIN en HIGH.
+  - Se paso de 5 HCE_REINTENTOS a 12.
+  - Ahora se envía el folio de venta en la trama de prepago.
+  - Se añadio un sleep de 1 segundo antes que suene el zumbador al finalizar la venta digital.
+  - Nueva versión de .so.
+- v3.57:
+  - Se implemento la funcionalidad de que al reiniciar el lector también se reinicie la instancia del PN532 en prepago.
+  - Se arreglo el bug de que cuando se le daba a "Pagar con Efecivo" la pantalla colapbasa.
+- v3.56:
+  - Se cambio el flujo de trabajo de LeerTarjeta y prepago.
+  - Se implemento un nuevo boton en la pantalla de inicio para reiniciar el Reader.
+- v3.55:
+  - Se implemento la venta digital por codigos QR.
+  - Se mejora el .so y el codigo de python de la detección de tarjetas para el problema de RX.
+- v3.54:
+  - Ahora se imprime un boleto para venta digital.
+  - Ahora no se frusta la venta de efectivo y digital cuando la impresión de boleto falla.
+  - Al momento de realizar el cobro de venta digital si no se detecta el pn532 se muestra un mensaje de error y se vuelve a la pantalla de servicios.
+  - Se implemento el reseteo del lector NFC por RSTPDN.
+  - Se eliminan las ventas digitales con mas de 15 dias de antiguedad.
+  - Se mofico la ventana de servicios, corte y cerrar turno.
+  - Ya no es necesario la impresora para vender boletos y cerrar viaje.
+- v3.53:
+  - Se implemento el envío 10 veces de la trama de datos hacia el celular.
 - v3.52:
   - Se implemento todo el sistema de Prepago.
 - v2.51:
